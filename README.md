@@ -20,9 +20,14 @@ git clone git@github.com:diegogliarte/web-hunter.git
 pip install -r requirements.txt
 ```
 
-3, Environment Setup:
-Create a .env file in the root directory.
-Populate it with necessary SMTP and Discord configurations.
+3. Environment Setup:
+    - Create a .env file in the root directory.
+    - Populate it with necessary SMTP and Discord configurations.
+
+4. Selenium WebDriver Setup:
+   - This project requires chromedriver.exe for Selenium to work.
+   - Download it from the ChromeDriver site.
+   - Ensure it's in your system's PATH or specify its location in the code.
 
 
 ## 🚀 Usage
