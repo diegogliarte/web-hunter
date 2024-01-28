@@ -16,7 +16,7 @@ def setup_logger():
         'disable_existing_loggers': False,
         'formatters': {
             'standard': {
-                'format': '%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+                'format': '%(asctime)s %(levelname)-8s [%(filename)s:%(lineno)d] %(message)s',
             },
         },
         'handlers': {

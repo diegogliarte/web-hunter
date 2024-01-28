@@ -24,7 +24,7 @@ class EmailNotifier(BaseNotifier):
         msg = MIMEMultipart("alternative")
         msg["Subject"] = "WebHunter Scraping Report"
         msg["From"] = smtp_parameters.username
-        msg["To"] = smtp_parameters.to
+        msg["To"] = ", ".join(smtp_parameters.to)
         part1 = MIMEText(body, "html")
         msg.attach(part1)
 

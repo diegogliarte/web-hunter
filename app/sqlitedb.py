@@ -9,6 +9,13 @@ logger = logging.getLogger(__name__)
 
 
 class SQLiteDB:
+    _instance = None
+
+    def __new__(cls):
+        if cls._instance is None:
+            cls._instance = super(SQLiteDB, cls).__new__(cls)
+        return cls._instance
+
     def __init__(self):
         self.conn = None
         try:
@@ -20,6 +27,7 @@ class SQLiteDB:
 
     def create_table(self):
         if not self.conn:
+            logger.error("No connection to database")
             return
         try:
             query = """
@@ -30,7 +38,8 @@ class SQLiteDB:
                     url TEXT,
                     price REAL,
                     expiration_date TIMESTAMP,
-                    creation_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                    creation_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                    sent BOOLEAN DEFAULT FALSE
                 );
             """
             self.conn.execute(query)
@@ -39,15 +48,17 @@ class SQLiteDB:
             logging.error(f"Error creating table: {e}")
             raise
 
-    def item_exists(self, item: ScrapedItem) -> bool:
+    def item_already_sent(self, item: ScrapedItem) -> bool:
         if not self.conn:
+            logger.error("No connection to database")
             return False
         try:
             query = """
                 SELECT 1 FROM scraped_items
                 WHERE name = ? AND scraper = ? AND url = ? 
                 AND (price = ? OR (price IS NULL AND ? IS NULL))
-                AND (expiration_date = ? OR (expiration_date IS NULL AND ? IS NULL));
+                AND (expiration_date = ? OR (expiration_date IS NULL AND ? IS NULL))
+                AND sent = TRUE;
             """
             cursor = self.conn.execute(
                 query,
@@ -61,13 +72,15 @@ class SQLiteDB:
                     item.expiration_date,
                 ),
             )
-            return cursor.fetchone() is not None
+            result = cursor.fetchone()
+            return result is not None
         except sqlite3.Error as e:
             logging.error(f"Error checking if item exists in database: {e}")
             raise
 
     def add_scraped_item(self, item: ScrapedItem) -> Optional[bool]:
         if not self.conn:
+            logger.error("No connection to database")
             return None
         try:
             query = """
@@ -88,4 +101,27 @@ class SQLiteDB:
             return True
         except sqlite3.Error as e:
             logging.error(f"Error adding item to database: {e}")
+            raise
+
+    def mark_item_as_sent(self, item: ScrapedItem):
+        if not self.conn:
+            logger.error("No connection to database")
+            return
+        try:
+            query = """
+                UPDATE scraped_items
+                SET sent = TRUE
+                WHERE name = ? AND scraper = ? AND url = ?;
+            """
+            self.conn.execute(
+                query,
+                (
+                    item.name,
+                    item.scraper.__name__,
+                    item.url,
+                ),
+            )
+            self.conn.commit()
+        except sqlite3.Error as e:
+            logging.error(f"Error marking item as sent in database: {e}")
             raise
