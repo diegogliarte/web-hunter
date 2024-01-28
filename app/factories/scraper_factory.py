@@ -3,6 +3,7 @@ from scrapers.base_scraper import BaseScraper
 from scrapers.fanatical_scraper import FanaticalScraper
 from scrapers.humble_bundle_scraper import HumbleBundleScraper
 from scrapers.steamdb_scraper import SteamDBScraper
+from scrapers.humble_choice_scraper import HumbleChoiceScraper
 
 
 class ScraperFactory:
@@ -14,5 +15,7 @@ class ScraperFactory:
             return FanaticalScraper()
         elif scraper_enum == ScraperEnum.STEAM_DB:
             return SteamDBScraper()
+        elif scraper_enum == ScraperEnum.HUMBLE_CHOICE:
+            return HumbleChoiceScraper()
 
         raise ValueError("Unknown scraper")

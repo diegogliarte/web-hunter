@@ -12,6 +12,8 @@ from notifications.base_notifier import BaseNotifier
 from notifications.smtp_parameters import SMTPParameters
 from scrapers.base_scraper import BaseScraper
 
+from scrapers.humble_choice_scraper import HumbleChoiceScraper
+
 logger = logging.getLogger(__name__)
 
 
@@ -34,8 +36,11 @@ class EmailNotifier(BaseNotifier):
     def create_email_body(scraped_data, bundles_count, errors_count) -> str:
         body = "<html><body>"
         body += "<h2 style='color: navy;'>🌍 WebHunter Daily Digest 🌍</h2>"
-        body += f"<h3 style='color: green;'>🎉 Total Bundles Discovered: {bundles_count}</h3>"
-        body += f"<h3 style='color: red;'>❌ Total Errors: {errors_count}</h3>"
+
+        if bundles_count > 0:
+            body += f"<h3 style='color: green;'>🎉 Total Bundles Discovered: {bundles_count}</h3>"
+        if errors_count > 0:
+            body += f"<h3 style='color: red;'>❌ Total Errors: {errors_count}</h3>"
 
         if bundles_count > 0:
             body += "<h4>🎁 <u>Bundles:</u></h4>"
@@ -43,10 +48,15 @@ class EmailNotifier(BaseNotifier):
             for scraper, items in scraped_data.items():
                 bundle_items = [item for item in items if isinstance(item, ScrapedItem)]
                 if bundle_items:
-                    body += f"<li><strong>{scraper.__name__}</strong>:<ul>"
-                    for item in bundle_items:
-                        time_left = EmailNotifier.get_time_left(item.expiration_date)
-                        body += f"<li><a href='{item.url}'>{item.name}</a> - Time Left: {time_left}</li>"
+                    if scraper == HumbleChoiceScraper:
+                        body += f"<li><a href='{bundle_items[0].url}'><strong>{scraper.__name__}</strong></a>:<ul>"
+                        for item in bundle_items:
+                            body += f"<li>{item.name}</li>"
+                    else:
+                        body += f"<li><strong>{scraper.__name__}</strong>:<ul>"
+                        for item in bundle_items:
+                            time_left = EmailNotifier.get_time_left(item.expiration_date)
+                            body += f"<li><a href='{item.url}'>{item.name}</a> {time_left}</li>"
                     body += "</ul></li>"
             body += "</ul>"
 
@@ -81,7 +91,7 @@ class EmailNotifier(BaseNotifier):
     @staticmethod
     def get_time_left(expiration_date_str: str) -> str:
         if not expiration_date_str:
-            return "No Expiry Date"
+            return ""
         expiration_date = datetime.datetime.fromisoformat(expiration_date_str)
         now = datetime.datetime.now()
         time_delta = expiration_date - now

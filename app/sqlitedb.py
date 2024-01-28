@@ -3,7 +3,6 @@ import sqlite3
 import logging
 from typing import Optional
 
-from configuration import settings
 from items.scraped_item import ScrapedItem
 
 logger = logging.getLogger(__name__)
