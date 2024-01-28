@@ -5,7 +5,7 @@ import os
 
 def setup_logger():
     # Default values if environment variables are not set
-    log_folder = "logs"
+    log_folder = os.environ.get("LOG_FOLDER", "logs")
     log_file = os.environ.get("LOG_FILE", "webhunter.log")
     log_level = os.environ.get("LOG_LEVEL", "INFO")
     backups = int(os.environ.get("LOG_BACKUPS", 7))
