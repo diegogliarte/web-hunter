@@ -20,7 +20,7 @@ class SQLiteDB:
     def __init__(self):
         self.conn = None
         try:
-            self.conn = sqlite3.connect(os.environ.get("DATABASE_PATH"))
+            self.conn = sqlite3.connect(os.environ.get("DATABASE_PATH", "db.sqlite3"))
             self.create_table()
         except sqlite3.Error as e:
             logging.error(f"Error connecting to database: {e}")
