@@ -1,5 +1,4 @@
 from dataclasses import dataclass
-from typing import Type
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
@@ -8,4 +7,4 @@ if TYPE_CHECKING:
 
 @dataclass
 class BaseItem:
-    scraper: Type["BaseScraper"]
+    scraper: type["BaseScraper"]

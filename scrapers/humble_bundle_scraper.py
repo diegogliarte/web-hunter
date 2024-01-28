@@ -1,11 +1,9 @@
 import json
 import logging
-from typing import List
 
 import requests
 import bs4
 
-from factories.scraper_enums import ScraperEnum
 from items.base_item import BaseItem
 from items.error_item import ErrorItem
 from items.scraped_item import ScrapedItem
@@ -19,7 +17,7 @@ class HumbleBundleScraper(BaseScraper):
     BUNDLES_URL = f"{BASE_URL}/bundles"
     CATEGORY_NAMES = ["books", "games", "software"]
 
-    def scrape(self) -> List[BaseItem]:
+    def scrape(self) -> list[BaseItem]:
         try:
             response = requests.get(self.BUNDLES_URL)
             response.raise_for_status()
@@ -29,7 +27,7 @@ class HumbleBundleScraper(BaseScraper):
 
         return self.parse_response(response.text)
 
-    def parse_response(self, html: str) -> List[BaseItem]:
+    def parse_response(self, html: str) -> list[BaseItem]:
         soup = bs4.BeautifulSoup(html, "html.parser")
         try:
             bundles_json_text = soup.find("script", id="landingPage-json-data").text
@@ -40,7 +38,7 @@ class HumbleBundleScraper(BaseScraper):
 
         return self.extract_items(bundles_json)
 
-    def extract_items(self, bundles_json: dict) -> List[BaseItem]:
+    def extract_items(self, bundles_json: dict) -> list[BaseItem]:
         bundles_data = bundles_json.get("data", {})
 
         parsed_items = []
@@ -55,7 +53,7 @@ class HumbleBundleScraper(BaseScraper):
 
         return parsed_items
 
-    def parse_category(self, category: dict) -> List[BaseItem]:
+    def parse_category(self, category: dict) -> list[BaseItem]:
         try:
             mosaic = category["mosaic"][0]
             products = mosaic["products"]

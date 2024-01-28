@@ -7,4 +7,4 @@ class SMTPParameters:
     port: int
     username: str
     password: str
-    to: str
+    to: list[str]

@@ -1,6 +1,5 @@
 import argparse
 import logging
-from typing import List, Dict, Type
 
 from dotenv import load_dotenv
 
@@ -20,7 +19,7 @@ logger = logging.getLogger(__name__)
 load_dotenv()
 
 
-def main(scraper_enums: List[ScraperEnum], notifier_enums: List[NotifierEnum]) -> None:
+def main(scraper_enums: list[ScraperEnum], notifier_enums: list[NotifierEnum]) -> None:
     logger.info("Starting main application")
 
     db = SQLiteDB()
@@ -36,7 +35,7 @@ def main(scraper_enums: List[ScraperEnum], notifier_enums: List[NotifierEnum]) -
     logger.info("Ending main application\n")
 
 
-def execute_scrapers(scrapers: List[BaseScraper], db: SQLiteDB) -> Dict[Type[BaseScraper], List[BaseItem]]:
+def execute_scrapers(scrapers: list[BaseScraper], db: SQLiteDB) -> dict[type[BaseScraper], list[BaseItem]]:
     new_scraped_data = {}
     for scraper in scrapers:
         scraper_name = scraper.__class__.__name__
@@ -65,7 +64,7 @@ def add_items_to_db(db, new_items):
             db.add_scraped_item(item)
 
 
-def filter_new_items(db: SQLiteDB, items_scraped: List[BaseItem]) -> List[BaseItem]:
+def filter_new_items(db: SQLiteDB, items_scraped: list[BaseItem]) -> list[BaseItem]:
     return [
         item
         for item in items_scraped
@@ -73,7 +72,7 @@ def filter_new_items(db: SQLiteDB, items_scraped: List[BaseItem]) -> List[BaseIt
     ]
 
 
-def execute_notifiers(notifiers: List[BaseNotifier], scraped_data: Dict[Type[BaseScraper], List[BaseItem]]):
+def execute_notifiers(notifiers: list[BaseNotifier], scraped_data: dict[type[BaseScraper], list[BaseItem]]):
     for notifier in notifiers:
         notifier_name = notifier.__class__.__name__
         logger.info(f"Sending notification via {notifier_name}")

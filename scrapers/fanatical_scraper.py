@@ -1,4 +1,3 @@
-from typing import List
 
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
@@ -13,7 +12,7 @@ from scrapers.base_scraper import BaseScraper
 
 
 class FanaticalScraper(BaseScraper):
-    def scrape(self) -> List[BaseItem]:
+    def scrape(self) -> list[BaseItem]:
         url = "https://www.fanatical.com/en/bundle"
 
         # Setup for headless Chrome

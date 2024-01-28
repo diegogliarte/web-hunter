@@ -4,7 +4,6 @@ import os
 import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
-from typing import Dict, Type, List
 
 from items.base_item import BaseItem
 from items.error_item import ErrorItem
@@ -17,7 +16,7 @@ logger = logging.getLogger(__name__)
 
 
 class EmailNotifier(BaseNotifier):
-    def notify(self, scraped_data: Dict[Type[BaseScraper], List[BaseItem]]):
+    def notify(self, scraped_data: dict[type[BaseScraper], list[BaseItem]]):
         smtp_parameters = self.create_smtp_parameters()
         bundles_count, errors_count = self.get_counts(scraped_data)
         body = self.create_email_body(scraped_data, bundles_count, errors_count)
@@ -63,14 +62,13 @@ class EmailNotifier(BaseNotifier):
                     body += "</ul></li>"
             body += "</ul>"
 
-            body += "<p style='font-size: 16px;'>Until tomorrow, happy hunting! 🚀</p>"
-            body += "<p style='font-size: 16px;'>Your WebHunter Bot</p>"
+            body += "<p style='font-size: 16px;'>Until tomorrow! 🚀</p>"
             body += "</body></html>"
 
         return body
 
     @staticmethod
-    def get_counts(scraped_data: Dict[Type[BaseScraper], List[BaseItem]]) -> (int, int):
+    def get_counts(scraped_data: dict[type[BaseScraper], list[BaseItem]]) -> (int, int):
         bundles_count = 0
         errors_count = 0
 
@@ -97,7 +95,7 @@ class EmailNotifier(BaseNotifier):
             with smtplib.SMTP(smtp_parameters.host, smtp_parameters.port) as server:
                 server.starttls()
                 server.login(smtp_parameters.username, smtp_parameters.password)
-                server.sendmail(smtp_parameters.username, [smtp_parameters.to], message)
+                server.sendmail(smtp_parameters.username, smtp_parameters.to, message)
         except smtplib.SMTPException as e:
             logger.error(f"Error sending email: {e}")
 
@@ -108,5 +106,5 @@ class EmailNotifier(BaseNotifier):
             port=int(os.getenv("SMTP_PORT")),
             username=os.getenv("SMTP_USERNAME"),
             password=os.getenv("SMTP_PASSWORD"),
-            to=os.getenv("SMTP_TO"),
+            to=os.getenv("SMTP_TO").split(","),
         )
