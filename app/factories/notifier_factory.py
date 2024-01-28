@@ -1,7 +1,7 @@
-from app.factories.notifier_enums import NotifierEnum
-from app.notifications.base_notifier import BaseNotifier
-from app.notifications.discord_notifier import DiscordNotifier
-from app.notifications.email_notifier import EmailNotifier
+from factories.notifier_enums import NotifierEnum
+from notifications.base_notifier import BaseNotifier
+from notifications.discord_notifier import DiscordNotifier
+from notifications.email_notifier import EmailNotifier
 
 
 class NotifierFactory:

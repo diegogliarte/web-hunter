@@ -1,4 +1,4 @@
-from app.notifications.base_notifier import BaseNotifier
+from notifications.base_notifier import BaseNotifier
 
 
 class DiscordNotifier(BaseNotifier):

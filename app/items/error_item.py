@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from app.items.base_item import BaseItem
+from items.base_item import BaseItem
 
 
 @dataclass

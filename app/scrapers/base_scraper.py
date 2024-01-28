@@ -1,6 +1,6 @@
 import abc
 
-from app.items.base_item import BaseItem
+from items.base_item import BaseItem
 
 
 class BaseScraper(abc.ABC):

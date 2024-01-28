@@ -1,7 +1,7 @@
 import abc
 
-from app.items.base_item import BaseItem
-from app.scrapers.base_scraper import BaseScraper
+from items.base_item import BaseItem
+from scrapers.base_scraper import BaseScraper
 
 
 class BaseNotifier(abc.ABC):

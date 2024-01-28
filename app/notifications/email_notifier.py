@@ -5,12 +5,12 @@ import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
-from app.items.base_item import BaseItem
-from app.items.error_item import ErrorItem
-from app.items.scraped_item import ScrapedItem
-from app.notifications.base_notifier import BaseNotifier
-from app.notifications.smtp_parameters import SMTPParameters
-from app.scrapers.base_scraper import BaseScraper
+from items.base_item import BaseItem
+from items.error_item import ErrorItem
+from items.scraped_item import ScrapedItem
+from notifications.base_notifier import BaseNotifier
+from notifications.smtp_parameters import SMTPParameters
+from scrapers.base_scraper import BaseScraper
 
 logger = logging.getLogger(__name__)
 

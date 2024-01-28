@@ -3,17 +3,17 @@ import logging
 
 from dotenv import load_dotenv
 
-from app.configuration.logger import setup_logger
-from app.factories.notifier_enums import NotifierEnum
-from app.factories.notifier_factory import NotifierFactory
-from app.factories.scraper_enums import ScraperEnum
-from app.factories.scraper_factory import ScraperFactory
-from app.items.scraped_item import ScrapedItem
-from app.items.base_item import BaseItem
-from app.items.error_item import ErrorItem
-from app.notifications.base_notifier import BaseNotifier
-from app.scrapers.base_scraper import BaseScraper
-from app.sqlitedb import SQLiteDB
+from configuration.logger import setup_logger
+from factories.notifier_enums import NotifierEnum
+from factories.notifier_factory import NotifierFactory
+from factories.scraper_enums import ScraperEnum
+from factories.scraper_factory import ScraperFactory
+from items.scraped_item import ScrapedItem
+from items.base_item import BaseItem
+from items.error_item import ErrorItem
+from notifications.base_notifier import BaseNotifier
+from scrapers.base_scraper import BaseScraper
+from sqlitedb import SQLiteDB
 
 logger = logging.getLogger(__name__)
 load_dotenv()

@@ -1,8 +1,8 @@
-from app.factories.scraper_enums import ScraperEnum
-from app.scrapers.base_scraper import BaseScraper
-from app.scrapers.fanatical_scraper import FanaticalScraper
-from app.scrapers.humble_bundle_scraper import HumbleBundleScraper
-from app.scrapers.steamdb_scraper import SteamDBScraper
+from factories.scraper_enums import ScraperEnum
+from scrapers.base_scraper import BaseScraper
+from scrapers.fanatical_scraper import FanaticalScraper
+from scrapers.humble_bundle_scraper import HumbleBundleScraper
+from scrapers.steamdb_scraper import SteamDBScraper
 
 
 class ScraperFactory:
