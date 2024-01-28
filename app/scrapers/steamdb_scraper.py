@@ -1,5 +1,5 @@
-from scrapers.base_scraper import BaseScraper
-from items.scraped_item import ScrapedItem
+from app.scrapers.base_scraper import BaseScraper
+from app.items.scraped_item import ScrapedItem
 
 
 class SteamDBScraper(BaseScraper):

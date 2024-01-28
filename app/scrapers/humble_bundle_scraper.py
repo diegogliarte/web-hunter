@@ -4,10 +4,10 @@ import logging
 import requests
 import bs4
 
-from items.base_item import BaseItem
-from items.error_item import ErrorItem
-from items.scraped_item import ScrapedItem
-from scrapers.base_scraper import BaseScraper
+from app.items.base_item import BaseItem
+from app.items.error_item import ErrorItem
+from app.items.scraped_item import ScrapedItem
+from app.scrapers.base_scraper import BaseScraper
 
 logger = logging.getLogger(__name__)
 

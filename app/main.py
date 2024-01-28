@@ -3,10 +3,10 @@ import logging
 
 from dotenv import load_dotenv
 
-from factories. notifier_enums import NotifierEnum
-from factories.notifier_factory import NotifierFactory
-from factories.scraper_enums import ScraperEnum
-from factories.scraper_factory import ScraperFactory
+from app.factories.notifier_enums import NotifierEnum
+from app.factories.notifier_factory import NotifierFactory
+from app.factories.scraper_enums import ScraperEnum
+from app.factories.scraper_factory import ScraperFactory
 from configuration.logger import setup_logger
 from items.base_item import BaseItem
 from items.error_item import ErrorItem

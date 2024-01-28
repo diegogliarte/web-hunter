@@ -6,9 +6,9 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
 
-from items.base_item import BaseItem
-from items.scraped_item import ScrapedItem
-from scrapers.base_scraper import BaseScraper
+from app.items.base_item import BaseItem
+from app.items.scraped_item import ScrapedItem
+from app.scrapers.base_scraper import BaseScraper
 
 
 class FanaticalScraper(BaseScraper):
