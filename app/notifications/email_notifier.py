@@ -47,6 +47,8 @@ class EmailNotifier(BaseNotifier):
             body += "<ul>"
             for scraper, items in scraped_data.items():
                 bundle_items = [item for item in items if isinstance(item, ScrapedItem)]
+                bundle_items = sorted(bundle_items,
+                                      key=lambda item: (item.expiration_date is None, item.expiration_date))
                 if bundle_items:
                     if scraper == HumbleChoiceScraper:
                         body += f"<li><a href='{bundle_items[0].url}'><strong>{scraper.__name__}</strong></a>:<ul>"
@@ -57,7 +59,7 @@ class EmailNotifier(BaseNotifier):
                         for item in bundle_items:
                             time_left = EmailNotifier.get_time_left(item.expiration_date)
                             body += f"<li><a href='{item.url}'>{item.name}</a> {time_left}</li>"
-                    body += "</ul></li>"
+                    body += "</ul></li><br>"
             body += "</ul>"
 
         if errors_count > 0:

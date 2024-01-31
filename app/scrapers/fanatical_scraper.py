@@ -1,45 +1,50 @@
+import logging
+from datetime import datetime
 
-from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.chrome.service import Service
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.support.wait import WebDriverWait
+import requests
 
 from items.base_item import BaseItem
+from items.error_item import ErrorItem
 from items.scraped_item import ScrapedItem
 from scrapers.base_scraper import BaseScraper
 
+logger = logging.getLogger(__name__)
+
 
 class FanaticalScraper(BaseScraper):
+    BASE_URL = "https://www.fanatical.com/api/all/en"
+
     def scrape(self) -> list[BaseItem]:
-        url = "https://www.fanatical.com/en/bundle"
-
-        # Setup for headless Chrome
-        options = Options()
-        options.add_argument("--headless")
-        options.add_argument("--disable-gpu")
-
-        service = Service(r"chromedriver.exe")
-        driver = webdriver.Chrome(service=service, options=options)
-
-        scraped_items = []
-
         try:
-            driver.get(url)
+            response = requests.get(self.BASE_URL)
+            response.raise_for_status()
+        except requests.RequestException as e:
+            logger.error(f"Error fetching Humble Bundle data: {e}")
+            return [ErrorItem(scraper=type(self), code=response.status_code, message=str(e))]
 
-            WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CLASS_NAME, "HitCardsRow")))
+        return self.parse_response(response.json())
 
-            bundles = driver.find_elements(By.CLASS_NAME, "HitCardContainer")
-            for bundle in bundles:
-                a_element = bundle.find_element(By.TAG_NAME, "a")
-                href = a_element.get_attribute("href")
-                name = href.split("/")[-1]
-                name = name.replace("-", " ").title()
-                item = ScrapedItem(name=name, scraper=type(self), url=href)
-                scraped_items.append(item)
+    def parse_response(self, response_json: dict) -> list[BaseItem]:
+        items = []
 
-            return scraped_items
+        for bundle in response_json["pickandmix"]:
+            name = bundle["name"]
+            slug = bundle["slug"]
+            valid_until_str = bundle.get("valid_until")
+            url = f"https://www.fanatical.com/en/pick-and-mix/{slug}"
 
-        finally:
-            driver.quit()
+            if valid_until_str:
+                valid_until = datetime.strptime(valid_until_str, '%Y-%m-%dT%H:%M:%S.%fZ')
+                valid_until_formatted = valid_until.strftime('%Y-%m-%dT%H:%M:%S')
+            else:
+                valid_until_formatted = None
+
+            item = ScrapedItem(
+                name=name,
+                scraper=type(self),
+                url=url,
+                expiration_date=valid_until_formatted,
+            )
+            items.append(item)
+
+        return items
