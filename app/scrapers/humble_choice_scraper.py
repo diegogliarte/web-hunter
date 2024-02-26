@@ -19,7 +19,6 @@ class HumbleChoiceScraper(BaseScraper):
     def scrape(self) -> list[BaseItem]:
         try:
             url = self.generate_url()
-            url = "https://www.humblebundle.com/membership/january-2024"
             response = requests.get(url)
             response.raise_for_status()
         except requests.RequestException as e:
